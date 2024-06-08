@@ -1,0 +1,114 @@
+<div
+    class="bg-card flex min-w-0 flex-auto flex-col dark:bg-transparent sm:absolute sm:inset-0 sm:overflow-hidden"
+>
+    <!-- Header -->
+    <div
+        class="relative flex flex-0 flex-col border-b px-6 py-8 sm:flex-row sm:items-center sm:justify-between md:px-8"
+    >
+        <!-- Loader -->
+        @if (isLoading) {
+            <div class="absolute inset-x-0 bottom-0">
+                <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+            </div>
+        }
+        <!-- Title -->
+        <div class="text-2xl font-extrabold tracking-tight">Haha</div>
+
+        <!-- Actions -->
+        <div class="mt-6 flex shrink-0 justify-end gap-3 sm:ml-4 sm:mt-0"></div>
+    </div>
+
+    <div class="grid h-screen grid-cols-5 overflow-y-scroll">
+        <div class="col-span-1 p-8">
+            <div class="flex flex-col gap-4" [formGroup]="filterForm">
+                <div class="flex flex-col gap-4">
+                    <div class="text-xl font-bold text-gray-600">Search</div>
+                    <div>
+                        <!-- Search -->
+                        <mat-form-field
+                            class="fuse-mat-dense fuse-mat-rounded min-w-64"
+                            [subscriptSizing]="'dynamic'"
+                        >
+                            <mat-icon
+                                class="icon-size-5"
+                                matPrefix
+                                [svgIcon]="'heroicons_solid:magnifying-glass'"
+                            ></mat-icon>
+                            <input
+                                matInput
+                                [formControlName]="'search'"
+                                [autocomplete]="'off'"
+                                [placeholder]="'Search'"
+                            />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <div class="text-xl font-bold text-gray-600">
+                        Categories
+                    </div>
+                    <app-checkbox-list
+                        [list]="categories"
+                        formArrayName="list"
+                        [form]="filterForm"
+                        (valueChanged)="onCategoriesChanged($event)"
+                    ></app-checkbox-list>
+                </div>
+            </div>
+        </div>
+        <div class="col-span-4 overflow-y-scroll p-8">
+            <div class="grid grid-cols-3 gap-4">
+                <div class="col-span-1">
+                    <fuse-card class="filter-listing flex w-full flex-col">
+                        <a [routerLink]="['/products', '1']">
+                            <img
+                                class="object-cover"
+                                src="images/cards/mansion-01-320x200.jpg"
+                                alt="Card cover image"
+                            />
+                        </a>
+                        <div class="m-8 mb-4">
+                            <div class="flex justify-between">
+                                <div class="flex flex-col">
+                                    <div class="text-secondary text-md">
+                                        FURNISHED MANSION
+                                    </div>
+                                    <div
+                                        class="mt-1 text-2xl font-semibold leading-tight"
+                                    >
+                                        USD $24.000.000
+                                    </div>
+                                    <div class="text-secondary mt-1 text-md">
+                                        1 E. Pumpkin Hill Drive
+                                    </div>
+                                </div>
+                                <button class="-mr-2 -mt-2" mat-icon-button>
+                                    <mat-icon
+                                        class="text-hint icon-size-5"
+                                        [svgIcon]="'heroicons_solid:heart'"
+                                    ></mat-icon>
+                                </button>
+                            </div>
+                            <hr class="my-4 border-b" />
+                            <div class="flex flex-wrap text-md">
+                                <span class="whitespace-nowrap"
+                                    ><b>10</b> beds</span
+                                >
+                                <span class="text-secondary mx-2">&bull;</span>
+                                <span class="whitespace-nowrap"
+                                    ><b>4</b> baths</span
+                                >
+                                <span class="text-secondary mx-2">&bull;</span>
+                                <span class="whitespace-nowrap"
+                                    ><b>21k</b> sqft.</span
+                                >
+                            </div>
+                            <hr class="my-4 border-b" />
+                            <div class="-mx-3 mt-3"></div>
+                        </div>
+                    </fuse-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
