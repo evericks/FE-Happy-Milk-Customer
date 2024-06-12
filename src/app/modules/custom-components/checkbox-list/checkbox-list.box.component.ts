@@ -31,10 +31,10 @@ export class CheckboxListComponent implements OnInit {
 
   listenCategoriesChange() {
     this.formControlArray.valueChanges.subscribe(values => {
-      const selectedCheckboxNames = values
-        .map((checked, index) => checked ? this.list[index].name : null)
+      const selectedCheckboxIds = values
+        .map((checked, index) => checked ? this.list[index].id : null)
         .filter(value => value !== null);
-      this.valueChanged.emit(selectedCheckboxNames);
+      this.valueChanged.emit(selectedCheckboxIds);
     });
   }
 }

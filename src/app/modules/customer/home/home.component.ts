@@ -7,13 +7,19 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { FuseCardComponent } from '@fuse/components/card';
 import { CheckboxListComponent } from 'app/modules/custom-components/checkbox-list/checkbox-list.box.component';
+import { Category } from 'app/types/category.type';
+import { Product } from 'app/types/product.type';
+import { Observable, Subject, debounceTime, filter, map, switchMap, takeUntil } from 'rxjs';
+import { ProductService } from '../product/product.service';
+import { CategoryService } from '../category/category.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'home',
     standalone: true,
     templateUrl: './home.component.html',
     encapsulation: ViewEncapsulation.None,
-    imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule, MatFormFieldModule,
+    imports: [CommonModule, MatCheckboxModule, FormsModule, ReactiveFormsModule, MatFormFieldModule,
         MatIconModule, MatInputModule, CheckboxListComponent, FuseCardComponent, RouterModule]
 })
 export class HomeComponent implements OnInit {
@@ -22,41 +28,59 @@ export class HomeComponent implements OnInit {
     search: string;
     filterForm: UntypedFormGroup;
 
-    categories = [
-        { id: 1, name: 'Sữa cho mẹ' },
-        { id: 2, name: 'Sữa cho bé' },
-        { id: 3, name: 'Từ 1 đến 3' },
-        { id: 4, name: 'Từ 3 đến 5 tuổi' },
-        { id: 5, name: 'Từ 5 đến 8 tuổi' },
-        { id: 6, name: 'Trên 8 tuổi' },
-        { id: 7, name: 'Trên 12 tuổi' }
-    ];
+    products$: Observable<Product[]>;
+    categories$: Observable<Category[]>;
+
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+
     /**
      * Constructor
      */
     constructor(
         private _formBuilder: UntypedFormBuilder,
+        private _productService: ProductService,
+        private _categoryService: CategoryService
     ) { }
 
     ngOnInit(): void {
+
+        // Get the products
+        this.products$ = this._productService.products$;
+
+        // Get the categories
+        this.categories$ = this._categoryService.categories$;
+
         this.initFilterForm();
+        this.subcribeFilterForm();
     }
 
     private initFilterForm() {
         this.filterForm = this._formBuilder.group({
             search: [null],
-            categories: [null]
+            categories: [null],
+            pageSize: [null],
+            pageNumber: [null]
         });
+    }
+
+    private subcribeFilterForm() {
+        this.filterForm.valueChanges.pipe(
+            takeUntil(this._unsubscribeAll),
+            filter(() => this.filterForm.valid),
+            debounceTime(500),
+            switchMap((filter) => {
+                this.isLoading = true;
+                let result = this._productService.getProducts(filter);
+                return result;
+            }),
+            map(() => {
+                this.isLoading = false;
+            })
+        ).subscribe();
     }
 
     onCategoriesChanged(selectedCheckbox: string[]) {
         this.filterForm.controls['categories'].setValue(selectedCheckbox);
-
-        this.filterForm.value.categories
-            .map((checked, index) => checked ? this.categories[index].name : null)
-            .filter(value => value !== null);
-
         console.log(this.filterForm.value);
-
     }
 }

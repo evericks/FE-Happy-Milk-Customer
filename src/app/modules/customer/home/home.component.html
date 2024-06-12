@@ -18,7 +18,7 @@
         <div class="mt-6 flex shrink-0 justify-end gap-3 sm:ml-4 sm:mt-0"></div>
     </div>
 
-    <div class="grid h-screen grid-cols-5 overflow-y-scroll">
+    <div class="grid h-screen grid-cols-6 overflow-y-scroll">
         <div class="col-span-1 p-8">
             <div class="flex flex-col gap-4" [formGroup]="filterForm">
                 <div class="flex flex-col gap-4">
@@ -26,7 +26,7 @@
                     <div>
                         <!-- Search -->
                         <mat-form-field
-                            class="fuse-mat-dense fuse-mat-rounded min-w-64"
+                            class="fuse-mat-dense fuse-mat-rounded w-full"
                             [subscriptSizing]="'dynamic'"
                         >
                             <mat-icon
@@ -48,7 +48,7 @@
                         Categories
                     </div>
                     <app-checkbox-list
-                        [list]="categories"
+                        [list]="categories$ | async"
                         formArrayName="list"
                         [form]="filterForm"
                         (valueChanged)="onCategoriesChanged($event)"
@@ -56,59 +56,115 @@
                 </div>
             </div>
         </div>
-        <div class="col-span-4 overflow-y-scroll p-8">
-            <div class="grid grid-cols-3 gap-4">
-                <div class="col-span-1">
-                    <fuse-card class="filter-listing flex w-full flex-col">
-                        <a [routerLink]="['/products', '1']">
-                            <img
-                                class="object-cover"
-                                src="images/cards/mansion-01-320x200.jpg"
-                                alt="Card cover image"
-                            />
-                        </a>
-                        <div class="m-8 mb-4">
-                            <div class="flex justify-between">
-                                <div class="flex flex-col">
-                                    <div class="text-secondary text-md">
-                                        FURNISHED MANSION
+        <ng-container *ngIf="products$ | async as products">
+            <div class="col-span-5 overflow-y-scroll p-8">
+                <div class="grid auto-rows-fr grid-cols-5 gap-4">
+                    @for (product of products; track $index) {
+                        <div class="col-span-1">
+                            <fuse-card
+                                class="filter-listing flex h-full w-full flex-col"
+                            >
+                                <a [routerLink]="['/products', '1']">
+                                    <img
+                                        class="max-h-48 object-cover"
+                                        [src]="product.thumbnailUrl"
+                                        alt="Card cover image"
+                                    />
+                                </a>
+                                <div
+                                    class="m-4 mb-4 flex h-full flex-col justify-between gap-4"
+                                >
+                                    <div class="body">
+                                        <div class="flex justify-between">
+                                            <div class="flex flex-col">
+                                                <div
+                                                    class="mt-1 text-2xl font-semibold leading-tight"
+                                                >
+                                                    {{
+                                                        product.price
+                                                            | number: '1.0-2'
+                                                    }}
+                                                    VNĐ
+                                                </div>
+                                                <div
+                                                    class="text-secondary mt-1 text-xl"
+                                                >
+                                                    {{
+                                                        product.name +
+                                                            product.name
+                                                    }}
+                                                </div>
+                                                <div
+                                                    class="text-secondary text-md"
+                                                >
+                                                    {{ product.origin }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="my-4"></div>
+                                        <div class="flex flex-wrap text-md">
+                                            @for (
+                                                productCategory of product.productCategories;
+                                                track $index
+                                            ) {
+                                                <span
+                                                    class="me-2 rounded bg-blue-500 px-2.5 py-0.5 text-md font-medium text-white dark:bg-yellow-900 dark:text-yellow-300"
+                                                >
+                                                    {{
+                                                        productCategory.category
+                                                            .name
+                                                    }}
+                                                </span>
+                                            }
+                                        </div>
+                                        <div class="my-4"></div>
+                                        <div class="flex justify-between">
+                                            <span class="whitespace-nowrap"
+                                                ><b
+                                                    class="font-bold text-green-500"
+                                                    >{{ product.quantity }}</b
+                                                >
+                                                <span> Còn lại </span>
+                                            </span>
+                                            <span class="whitespace-nowrap"
+                                                ><b
+                                                    class="font-bold text-blue-500"
+                                                    >{{ product.sold }}</b
+                                                >
+                                                <span> Đã bán</span>
+                                            </span>
+                                        </div>
+                                        <div class="-mx-3 mt-3"></div>
                                     </div>
-                                    <div
-                                        class="mt-1 text-2xl font-semibold leading-tight"
-                                    >
-                                        USD $24.000.000
-                                    </div>
-                                    <div class="text-secondary mt-1 text-md">
-                                        1 E. Pumpkin Hill Drive
+
+                                    <div class="footer flex justify-between">
+                                        <div>
+                                            <button mat-icon-button>
+                                                <mat-icon
+                                                    class="text-hint icon-size-8"
+                                                    [svgIcon]="
+                                                        'heroicons_solid:heart'
+                                                    "
+                                                ></mat-icon>
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <button mat-icon-button>
+                                                <mat-icon
+                                                    class="text-hint icon-size-8"
+                                                    [svgIcon]="
+                                                        'heroicons_solid:shopping-cart'
+                                                    "
+                                                ></mat-icon>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                                <button class="-mr-2 -mt-2" mat-icon-button>
-                                    <mat-icon
-                                        class="text-hint icon-size-5"
-                                        [svgIcon]="'heroicons_solid:heart'"
-                                    ></mat-icon>
-                                </button>
-                            </div>
-                            <hr class="my-4 border-b" />
-                            <div class="flex flex-wrap text-md">
-                                <span class="whitespace-nowrap"
-                                    ><b>10</b> beds</span
-                                >
-                                <span class="text-secondary mx-2">&bull;</span>
-                                <span class="whitespace-nowrap"
-                                    ><b>4</b> baths</span
-                                >
-                                <span class="text-secondary mx-2">&bull;</span>
-                                <span class="whitespace-nowrap"
-                                    ><b>21k</b> sqft.</span
-                                >
-                            </div>
-                            <hr class="my-4 border-b" />
-                            <div class="-mx-3 mt-3"></div>
+                            </fuse-card>
                         </div>
-                    </fuse-card>
+                    }
                 </div>
             </div>
-        </div>
+        </ng-container>
     </div>
 </div>
