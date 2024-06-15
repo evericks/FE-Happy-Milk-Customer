@@ -26,7 +26,7 @@
             </div>
 
             <!-- Alert -->
-            <fuse-alert
+            <!-- <fuse-alert
                 class="mt-8"
                 [appearance]="'outline'"
                 [showIcon]="false"
@@ -34,7 +34,7 @@
             >
                 You are browsing <strong>Fuse Demo</strong>. Click on the "Sign
                 in" button to access the Demo and Documentation.
-            </fuse-alert>
+            </fuse-alert> -->
 
             <!-- Alert -->
             @if (showAlert) {
@@ -54,14 +54,13 @@
                 <!-- Email field -->
                 <mat-form-field class="w-full">
                     <mat-label>Email address</mat-label>
-                    <input id="email" matInput [formControlName]="'email'" />
-                    @if (signInForm.get('email').hasError('required')) {
-                        <mat-error> Email address is required </mat-error>
-                    }
-                    @if (signInForm.get('email').hasError('email')) {
-                        <mat-error>
-                            Please enter a valid email address
-                        </mat-error>
+                    <input
+                        id="username"
+                        matInput
+                        [formControlName]="'username'"
+                    />
+                    @if (signInForm.get('username').hasError('required')) {
+                        <mat-error> Username is required </mat-error>
                     }
                 </mat-form-field>
 

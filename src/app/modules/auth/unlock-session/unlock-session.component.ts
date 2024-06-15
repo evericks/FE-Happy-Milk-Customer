@@ -46,7 +46,7 @@ export class AuthUnlockSessionComponent implements OnInit {
     name: string;
     showAlert: boolean = false;
     unlockSessionForm: UntypedFormGroup;
-    private _email: string;
+    private _username: string;
 
     /**
      * Constructor
@@ -57,7 +57,7 @@ export class AuthUnlockSessionComponent implements OnInit {
         private _formBuilder: UntypedFormBuilder,
         private _router: Router,
         private _userService: UserService
-    ) {}
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -70,7 +70,7 @@ export class AuthUnlockSessionComponent implements OnInit {
         // Get the user's name
         this._userService.user$.subscribe((user) => {
             this.name = user.name;
-            this._email = user.email;
+            this._username = user.username;
         });
 
         // Create the form
@@ -106,7 +106,7 @@ export class AuthUnlockSessionComponent implements OnInit {
 
         this._authService
             .unlockSession({
-                email: this._email ?? '',
+                email: this._username ?? '',
                 password: this.unlockSessionForm.get('password').value,
             })
             .subscribe(

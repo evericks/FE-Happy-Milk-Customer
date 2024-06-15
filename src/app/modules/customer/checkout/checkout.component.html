@@ -17,234 +17,286 @@
         <!-- Actions -->
         <div class="mt-6 flex shrink-0 justify-end gap-3 sm:ml-4 sm:mt-0"></div>
     </div>
-    <div class="grid h-screen w-full grid-cols-3 gap-8">
-        <div class="col-span-2 overflow-y-scroll">
-            <div
-                class="flex h-full w-full flex-col overflow-y-scroll bg-white shadow-xl"
-            >
-                <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+    <ng-container *ngIf="cart$ | async as cart">
+        <div class="grid h-screen w-full grid-cols-3 gap-8">
+            <div class="col-span-2 overflow-y-scroll">
+                <div
+                    class="flex h-full w-full flex-col overflow-y-scroll bg-white shadow-xl"
+                >
+                    <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+                        <div class="flex items-start justify-between">
+                            <h2
+                                class="text-lg font-medium text-gray-900"
+                                id="slide-over-title"
+                            >
+                                SHOPPING CART
+                            </h2>
+                        </div>
+
+                        <div class="mt-8">
+                            <div class="flow-root">
+                                <ul
+                                    role="list"
+                                    class="-my-6 divide-y divide-gray-200"
+                                >
+                                    @for (
+                                        item of cart.cartItems;
+                                        track $index
+                                    ) {
+                                        <li class="flex py-6">
+                                            <div
+                                                class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
+                                            >
+                                                <img
+                                                    [src]="
+                                                        item.product
+                                                            .thumbnailUrl
+                                                    "
+                                                    alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
+                                                    class="h-full w-full object-cover object-center"
+                                                />
+                                            </div>
+
+                                            <div
+                                                class="ml-4 flex flex-1 flex-col"
+                                            >
+                                                <div>
+                                                    <div
+                                                        class="flex justify-between text-base font-medium text-gray-900"
+                                                    >
+                                                        <h3>
+                                                            <a href="#">{{
+                                                                item.product
+                                                                    .name
+                                                            }}</a>
+                                                        </h3>
+                                                        <p class="ml-4">
+                                                            {{
+                                                                item.product
+                                                                    .price *
+                                                                    item.quantity
+                                                                    | number
+                                                                        : '1.0-2'
+                                                            }}
+                                                        </p>
+                                                    </div>
+                                                    <p
+                                                        class="mt-1 text-sm text-gray-500"
+                                                    >
+                                                        Remain Quantity
+                                                        <span
+                                                            class="font-semibold"
+                                                        >
+                                                            {{
+                                                                item.product
+                                                                    .quantity
+                                                            }}
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                                <div
+                                                    class="flex flex-1 items-end justify-between text-sm"
+                                                >
+                                                    <mat-form-field
+                                                        class="fuse-mat-dense max-w-64"
+                                                        [subscriptSizing]="
+                                                            'dynamic'
+                                                        "
+                                                    >
+                                                        <mat-icon
+                                                            class="icon-size-5"
+                                                            matPrefix
+                                                            [svgIcon]="
+                                                                'heroicons_solid:circle-stack'
+                                                            "
+                                                        ></mat-icon>
+                                                        <input
+                                                            matInput
+                                                            type="number"
+                                                            [min]="1"
+                                                            [max]="
+                                                                item.product
+                                                                    .quantity
+                                                            "
+                                                            [(ngModel)]="
+                                                                item.quantity
+                                                            "
+                                                            [autocomplete]="
+                                                                'off'
+                                                            "
+                                                            [placeholder]="
+                                                                'Phone'
+                                                            "
+                                                            (ngModelChange)="
+                                                                onQuantityChange(
+                                                                    cart.id,
+                                                                    item.id,
+                                                                    $event
+                                                                )
+                                                            "
+                                                            (keyup)="
+                                                                checkValidQuantity(
+                                                                    $event
+                                                                )
+                                                            "
+                                                        />
+                                                    </mat-form-field>
+
+                                                    <div class="flex">
+                                                        <button
+                                                            (click)="
+                                                                removeCartItem(
+                                                                    item.id
+                                                                )
+                                                            "
+                                                            type="button"
+                                                            class="font-medium text-indigo-600 hover:text-indigo-500"
+                                                        >
+                                                            Remove
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-1 overflow-y-scroll">
+                <div class="h-full w-full px-4 py-6 sm:px-6">
                     <div class="flex items-start justify-between">
                         <h2
                             class="text-lg font-medium text-gray-900"
                             id="slide-over-title"
                         >
-                            SHOPPING CART
+                            SHIPPING INFORMATION
                         </h2>
                     </div>
+                    <div
+                        class="mt-4 flex flex-col gap-4"
+                        [formGroup]="checkoutForm"
+                    >
+                        <mat-form-field
+                            class="fuse-mat-dense fuse-mat-rounded w-full"
+                            [subscriptSizing]="'dynamic'"
+                        >
+                            <mat-icon
+                                class="icon-size-5"
+                                matPrefix
+                                [svgIcon]="'heroicons_solid:user'"
+                            ></mat-icon>
+                            <input
+                                matInput
+                                [formControlName]="'receiver'"
+                                [autocomplete]="'off'"
+                                [placeholder]="'Receiver'"
+                            />
+                        </mat-form-field>
 
-                    <div class="mt-8">
-                        <div class="flow-root">
-                            <ul
-                                role="list"
-                                class="-my-6 divide-y divide-gray-200"
+                        <mat-form-field
+                            class="fuse-mat-dense fuse-mat-rounded w-full"
+                            [subscriptSizing]="'dynamic'"
+                        >
+                            <mat-icon
+                                class="icon-size-5"
+                                matPrefix
+                                [svgIcon]="'heroicons_solid:truck'"
+                            ></mat-icon>
+                            <input
+                                matInput
+                                [formControlName]="'address'"
+                                [autocomplete]="'off'"
+                                [placeholder]="'Address'"
+                            />
+                        </mat-form-field>
+
+                        <mat-form-field
+                            class="fuse-mat-dense fuse-mat-rounded w-full"
+                            [subscriptSizing]="'dynamic'"
+                        >
+                            <mat-icon
+                                class="icon-size-5"
+                                matPrefix
+                                [svgIcon]="'heroicons_solid:phone'"
+                            ></mat-icon>
+                            <input
+                                matInput
+                                [formControlName]="'phone'"
+                                [autocomplete]="'off'"
+                                [placeholder]="'Phone'"
+                            />
+                        </mat-form-field>
+
+                        <mat-radio-group
+                            aria-labelledby="example-radio-group-label"
+                            color="primary"
+                            class="example-radio-group flex justify-between gap-2"
+                            [formControlName]="'paymentMethod'"
+                        >
+                            <mat-radio-button
+                                class="example-radio-button"
+                                [value]="'Cash'"
+                                >Cash</mat-radio-button
                             >
-                                <li class="flex py-6">
-                                    <div
-                                        class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
-                                    >
-                                        <img
-                                            src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg"
-                                            alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
-                                            class="h-full w-full object-cover object-center"
-                                        />
-                                    </div>
-
-                                    <div class="ml-4 flex flex-1 flex-col">
-                                        <div>
-                                            <div
-                                                class="flex justify-between text-base font-medium text-gray-900"
-                                            >
-                                                <h3>
-                                                    <a href="#"
-                                                        >Throwback Hip Bag</a
-                                                    >
-                                                </h3>
-                                                <p class="ml-4">$90.00</p>
-                                            </div>
-                                            <p
-                                                class="mt-1 text-sm text-gray-500"
-                                            >
-                                                Salmon
-                                            </p>
-                                        </div>
-                                        <div
-                                            class="flex flex-1 items-end justify-between text-sm"
-                                        >
-                                            <mat-form-field
-                                                class="fuse-mat-dense max-w-64"
-                                                [subscriptSizing]="'dynamic'"
-                                            >
-                                                <mat-icon
-                                                    class="icon-size-5"
-                                                    matPrefix
-                                                    [svgIcon]="
-                                                        'heroicons_solid:circle-stack'
-                                                    "
-                                                ></mat-icon>
-                                                <input
-                                                    matInput
-                                                    type="number"
-                                                    [min]="1"
-                                                    [max]="999"
-                                                    [(ngModel)]="quantity"
-                                                    [autocomplete]="'off'"
-                                                    [placeholder]="'Phone'"
-                                                    (keyup)="
-                                                        checkValidQuantity(
-                                                            $event
-                                                        )
-                                                    "
-                                                />
-                                            </mat-form-field>
-
-                                            <div class="flex">
-                                                <button
-                                                    type="button"
-                                                    class="font-medium text-indigo-600 hover:text-indigo-500"
-                                                >
-                                                    Remove
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-span-1 overflow-y-scroll">
-            <div class="h-full w-full px-4 py-6 sm:px-6">
-                <div class="flex items-start justify-between">
-                    <h2
-                        class="text-lg font-medium text-gray-900"
-                        id="slide-over-title"
-                    >
-                        SHIPPING INFORMATION
-                    </h2>
-                </div>
-                <div
-                    class="mt-4 flex flex-col gap-4"
-                    [formGroup]="checkoutForm"
-                >
-                    <mat-form-field
-                        class="fuse-mat-dense fuse-mat-rounded w-full"
-                        [subscriptSizing]="'dynamic'"
-                    >
-                        <mat-icon
-                            class="icon-size-5"
-                            matPrefix
-                            [svgIcon]="'heroicons_solid:user'"
-                        ></mat-icon>
-                        <input
-                            matInput
-                            [formControlName]="'receiver'"
-                            [autocomplete]="'off'"
-                            [placeholder]="'Receiver'"
-                        />
-                    </mat-form-field>
-
-                    <mat-form-field
-                        class="fuse-mat-dense fuse-mat-rounded w-full"
-                        [subscriptSizing]="'dynamic'"
-                    >
-                        <mat-icon
-                            class="icon-size-5"
-                            matPrefix
-                            [svgIcon]="'heroicons_solid:truck'"
-                        ></mat-icon>
-                        <input
-                            matInput
-                            [formControlName]="'address'"
-                            [autocomplete]="'off'"
-                            [placeholder]="'Address'"
-                        />
-                    </mat-form-field>
-
-                    <mat-form-field
-                        class="fuse-mat-dense fuse-mat-rounded w-full"
-                        [subscriptSizing]="'dynamic'"
-                    >
-                        <mat-icon
-                            class="icon-size-5"
-                            matPrefix
-                            [svgIcon]="'heroicons_solid:phone'"
-                        ></mat-icon>
-                        <input
-                            matInput
-                            [formControlName]="'phone'"
-                            [autocomplete]="'off'"
-                            [placeholder]="'Phone'"
-                        />
-                    </mat-form-field>
-
-                    <mat-radio-group
-                        aria-labelledby="example-radio-group-label"
-                        color="primary"
-                        class="example-radio-group flex justify-between gap-2"
-                        [formControlName]="'paymentMethod'"
-                    >
-                        <mat-radio-button
-                            class="example-radio-button"
-                            [value]="'Cash'"
-                            >Cash</mat-radio-button
-                        >
-                        <mat-radio-button
-                            class="example-radio-button"
-                            [disabled]="true"
-                            [value]="'VNPay'"
-                            >VNPay</mat-radio-button
-                        >
-                        <mat-radio-button
-                            class="example-radio-button"
-                            [disabled]="true"
-                            [value]="'Visa'"
-                            >Visa</mat-radio-button
-                        >
-                    </mat-radio-group>
-
-                    <div class="mt-8 border-t border-gray-200">
-                        <div
-                            class="mt-4 flex justify-between text-base font-medium text-gray-900"
-                        >
-                            <p>Subtotal</p>
-                            <p>$262.00</p>
-                        </div>
-                        <p class="mt-0.5 text-sm text-gray-500">
-                            Shipping and taxes calculated at checkout.
-                        </p>
-                        <div class="mt-6">
-                            <button
-                                [disabled]="!checkoutForm.valid"
-                                (click)="submitCheckout()"
-                                type="submit"
-                                mat-raised-button
-                                color="primary"
-                                class="w-full"
+                            <mat-radio-button
+                                class="example-radio-button"
+                                [disabled]="true"
+                                [value]="'VNPay'"
+                                >VNPay</mat-radio-button
                             >
-                                Checkout
-                            </button>
-                        </div>
-                        <div
-                            class="mt-6 flex justify-center text-center text-sm text-gray-500"
-                        >
-                            <p>
-                                or
-                                <a
-                                    [routerLink]="['/home']"
-                                    routerLinkActive="router-link-active"
-                                    type="button"
-                                    class="font-medium text-indigo-600 hover:text-indigo-500"
-                                >
-                                    Continue Shopping
-                                    <span aria-hidden="true"> &rarr;</span>
-                                </a>
+                            <mat-radio-button
+                                class="example-radio-button"
+                                [disabled]="true"
+                                [value]="'Visa'"
+                                >Visa</mat-radio-button
+                            >
+                        </mat-radio-group>
+
+                        <div class="mt-8 border-t border-gray-200">
+                            <div
+                                class="mt-4 flex justify-between text-base font-medium text-gray-900"
+                            >
+                                <p>Subtotal</p>
+                                <p>{{ totalPrice | number: '1.0-2' }}</p>
+                            </div>
+                            <p class="mt-0.5 text-sm text-gray-500">
+                                Shipping and taxes calculated at checkout.
                             </p>
+                            <div class="mt-6">
+                                <button
+                                    [disabled]="!checkoutForm.valid"
+                                    (click)="submitCheckout()"
+                                    type="submit"
+                                    mat-raised-button
+                                    color="primary"
+                                    class="w-full"
+                                >
+                                    Checkout
+                                </button>
+                            </div>
+                            <div
+                                class="mt-6 flex justify-center text-center text-sm text-gray-500"
+                            >
+                                <p>
+                                    or
+                                    <a
+                                        [routerLink]="['/home']"
+                                        routerLinkActive="router-link-active"
+                                        type="button"
+                                        class="font-medium text-indigo-600 hover:text-indigo-500"
+                                    >
+                                        Continue Shopping
+                                        <span aria-hidden="true"> &rarr;</span>
+                                    </a>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </ng-container>
 </div>
