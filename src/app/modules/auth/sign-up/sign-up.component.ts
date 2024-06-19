@@ -54,7 +54,7 @@ export class AuthSignUpComponent implements OnInit {
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
         private _router: Router
-    ) {}
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -67,9 +67,8 @@ export class AuthSignUpComponent implements OnInit {
         // Create the form
         this.signUpForm = this._formBuilder.group({
             name: ['', Validators.required],
-            email: ['', [Validators.required, Validators.email]],
+            username: ['', [Validators.required]],
             password: ['', Validators.required],
-            company: [''],
             agreements: ['', Validators.requiredTrue],
         });
     }
@@ -109,7 +108,7 @@ export class AuthSignUpComponent implements OnInit {
                 // Set the alert
                 this.alert = {
                     type: 'error',
-                    message: 'Something went wrong, please try again.',
+                    message: response.error,
                 };
 
                 // Show the alert

@@ -53,7 +53,7 @@ export class CheckoutComponent implements OnInit {
         this.checkoutForm = this._formBuilder.group({
             customerId: [null, [Validators.required]],
             amount: [null, [Validators.required]],
-            receiver: ['null', [Validators.required]],
+            receiver: [null, [Validators.required]],
             address: [null, [Validators.required]],
             phone: [null, [Validators.required]],
             paymentMethod: ['Cash', [Validators.required]],

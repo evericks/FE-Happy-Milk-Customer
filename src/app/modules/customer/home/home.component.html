@@ -149,7 +149,10 @@
                                             </button>
                                         </div>
                                         <div>
-                                            <button mat-icon-button>
+                                            <button
+                                                mat-icon-button
+                                                (click)="addToCart(product.id)"
+                                            >
                                                 <mat-icon
                                                     class="text-hint icon-size-8"
                                                     [svgIcon]="
@@ -168,3 +171,25 @@
         </ng-container>
     </div>
 </div>
+
+<!-- Notification -->
+<a class="cursor-pointer" *ngIf="flashMessage">
+    <fuse-alert
+        class="absolute bottom-0 right-0 z-999"
+        [type]="'success'"
+        [appearance]="'border'"
+        *ngIf="flashMessage === 'success'"
+    >
+        <span fuseAlertTitle>Success</span>
+        {{ message }}
+    </fuse-alert>
+    <fuse-alert
+        class="absolute bottom-0 right-0 z-999"
+        [type]="'error'"
+        [appearance]="'border'"
+        *ngIf="flashMessage === 'error'"
+    >
+        <span fuseAlertTitle>Error</span>
+        {{ message }}
+    </fuse-alert>
+</a>

@@ -43,7 +43,7 @@ export class CartService {
     addToCart(data) {
         return this.cart$.pipe(
             take(1),
-            switchMap(() => this._httpClient.put<Cart>('/api/carts', data).pipe(
+            switchMap(() => this._httpClient.post<Cart>('/api/carts', data).pipe(
                 map((cart) => {
 
                     // Update cart
