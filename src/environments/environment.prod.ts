@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiURL: 'https://api-happymilk.evericks.com',
+    apiURL: 'http://api-happymilk.evericks.com',
 };
