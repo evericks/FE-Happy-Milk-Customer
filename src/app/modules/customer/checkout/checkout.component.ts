@@ -156,6 +156,22 @@ export class CheckoutComponent implements OnInit {
                             }
                         })
                     });
+                }, error => {
+                    this._fuseConfirmationService.open({
+                        title: 'Information',
+                        message: error.error,
+                        icon: {
+                            color: 'info'
+                        },
+                        actions: {
+                            confirm: {
+                                show: false
+                            },
+                            cancel: {
+                                label: 'Xác nhận'
+                            }
+                        }
+                    })
                 })
             }
         })
