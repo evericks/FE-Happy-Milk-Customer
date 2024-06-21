@@ -56,15 +56,15 @@ echo Creating web.config file...
   echo     ^</rewrite^>
   echo   ^</system.webServer^>
   echo ^</configuration^>
-) > "dist\fuse\web.config"
+) > "dist\fuse\browser\web.config"
 
-IF EXIST "C:\inetpub\wwwroot\fe-trade" (
-    echo Deleting existing files in fe-invoice...
+IF EXIST "C:\inetpub\wwwroot\fe-customer-happy-milk" (
+    echo Deleting existing files in fe-customer-happy-milk...
     CALL rmdir /s /q "C:\inetpub\wwwroot\fe-customer-happy-milk"
 )
 
 REM Tạo lại thư mục đích
-CALL mkdir "C:\inetpub\wwwroot\fe-invoice"
+CALL mkdir "C:\inetpub\wwwroot\fe-customer-happy-milk"
 
 REM Sao chép các file đã build vào thư mục đích
 echo Copying built files to fe-trade...
