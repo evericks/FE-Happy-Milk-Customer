@@ -68,7 +68,7 @@ CALL mkdir "C:\inetpub\wwwroot\fe-customer-happy-milk"
 
 REM Sao chép các file đã build vào thư mục đích
 echo Copying built files to fe-trade...
-CALL xcopy "dist\fuse\*" "C:\inetpub\wwwroot\fe-customer-happy-milk" /s /e /y
+CALL xcopy "dist\fuse\browser\*" "C:\inetpub\wwwroot\fe-customer-happy-milk" /s /e /y
 
 REM Thông báo hoàn thành và dừng màn hình
 echo Build completed. Press any key to exit.
