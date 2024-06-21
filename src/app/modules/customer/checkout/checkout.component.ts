@@ -10,20 +10,25 @@ import { RouterModule } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { CartService } from 'app/layout/common/cart/cart.service';
 import { Cart } from 'app/types/cart.type';
-import { Observable, Subject, catchError, debounceTime, map, of, switchMap, take } from 'rxjs';
+import { Observable, Subject, catchError, debounceTime, filter, map, of, switchMap, take } from 'rxjs';
+import { OrderService } from '../order/order.service';
+import { forEach } from 'lodash';
+import { FuseAlertComponent } from '@fuse/components/alert';
 
 @Component({
     selector: 'checkout',
     standalone: true,
     templateUrl: './checkout.component.html',
     encapsulation: ViewEncapsulation.None,
-    imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule, MatInputModule, MatFormFieldModule, MatIconModule, MatRadioModule, MatButtonModule]
+    imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule, MatInputModule, MatFormFieldModule, MatIconModule,
+        MatRadioModule, MatButtonModule, FuseAlertComponent]
 })
 export class CheckoutComponent implements OnInit {
     private quantityChangeSubject = new Subject<{ cartId: string, cartItemId: string, quantity: any }>();
 
     cart$: Observable<Cart>;
-    totalPrice: number;
+    totalPrice: number = 0;
+    cartItems: any[] = [];
     quantity: number = 3;
     paymentMethod: string;
     paymentMethods: string[] = ['VNPay', 'Momo', 'Cash', 'Visa'];
@@ -35,47 +40,67 @@ export class CheckoutComponent implements OnInit {
     constructor(
         private _formBuilder: UntypedFormBuilder,
         private _cartService: CartService,
-        private _fuseConfirmationService: FuseConfirmationService
+        private _fuseConfirmationService: FuseConfirmationService,
+        private _orderService: OrderService
     ) { }
 
     ngOnInit(): void {
         this.cart$ = this._cartService.cart$;
+        this.initCheckoutForm();
         this._cartService.cart$.subscribe(cart => {
             if (cart) {
-                this.totalPrice = cart.cartItems.reduce((sum, item) => sum + (item.quantity * item.product.price), 0);
+                this.calculateTotalPrice(cart);
+                this.calculateCartItems(cart);
+                this.setCheckoutFormValue();
             }
-        })
-        this.initCheckoutForm();
+        });
         this.subscribeQuantityChange();
     }
 
     initCheckoutForm() {
         this.checkoutForm = this._formBuilder.group({
-            customerId: [null, [Validators.required]],
             amount: [null, [Validators.required]],
             receiver: [null, [Validators.required]],
-            address: [null, [Validators.required]],
-            phone: [null, [Validators.required]],
+            address: [null, [Validators.required, Validators.minLength(10)]],
+            phone: [null, [Validators.required, Validators.minLength(10)]],
             paymentMethod: ['Cash', [Validators.required]],
+            orderDetails: [null, [Validators.required]]
         });
     }
 
-    checkValidQuantity(event: any) {
-        const key = event.key;
-        if (this.isNumberKey(key)) {
-            if (this.quantity < 1 || this.quantity > 999) {
-                console.log('cút');
-            }
-        }
+    private calculateTotalPrice(cart: Cart) {
+        this.totalPrice = cart.cartItems.reduce((sum, item) => sum + (item.quantity * item.product.price), 0);
     }
 
-    onQuantityChange(cartId: string, cartItemId: string, quantity: any) {
+    private calculateCartItems(cart: Cart) {
+        cart.cartItems.forEach(item => {
+            const existingItemIndex = this.cartItems.findIndex(cartItem => cartItem.productId === item.product.id);
+            const newItem = {
+                productId: item.product.id,
+                quantity: item.quantity,
+                price: item.product.price
+            };
+            if (existingItemIndex !== -1) {
+                this.cartItems[existingItemIndex] = newItem;
+            } else {
+                this.cartItems.push(newItem);
+            }
+        });
+    }
+
+    private setCheckoutFormValue() {
+        this.checkoutForm.controls['amount'].setValue(this.totalPrice);
+        this.checkoutForm.controls['orderDetails'].setValue(this.cartItems);
+    }
+
+    public onQuantityChange(cartId: string, cartItemId: string, quantity: any) {
         this.quantityChangeSubject.next({ cartId, cartItemId, quantity });
     }
 
-    subscribeQuantityChange() {
+    private subscribeQuantityChange() {
         this.quantityChangeSubject.pipe(
-            debounceTime(500), // Đợi 1 giây sau khi không còn thay đổi
+            filter(({ quantity }) => quantity !== null),
+            debounceTime(500),
             switchMap(({ cartId, cartItemId, quantity }) => {
                 var updateCartItem = {
                     id: cartItemId,
@@ -83,7 +108,19 @@ export class CheckoutComponent implements OnInit {
                 };
                 return this._cartService.updateCartItem(cartId, updateCartItem).pipe(
                     catchError(error => {
-                        return of(null); // Trả về Observable null để tiếp tục luồng
+                        this._fuseConfirmationService.open({
+                            title: 'Warning',
+                            message: error.error,
+                            actions: {
+                                confirm: {
+                                    show: false
+                                }
+                            },
+                            icon: {
+                                color: 'info'
+                            }
+                        });
+                        return of(null);
                     })
                 );
             })
@@ -92,20 +129,39 @@ export class CheckoutComponent implements OnInit {
         });
     }
 
-    isNumberKey(key: string): boolean {
-        const numberKeys = '0123456789';
-        return numberKeys.includes(key);
+    public submitCheckout() {
+        this._fuseConfirmationService.open({
+            title: 'Information',
+            message: 'Xác nhận tạo đơn hàng?',
+            icon: {
+                color: 'info'
+            }
+        }).afterClosed().subscribe(result => {
+            if (result === 'confirmed') {
+                this._orderService.createOrder(this.checkoutForm.value).subscribe(() => {
+                    this._cartService.getCart().subscribe(() => {
+                        this._fuseConfirmationService.open({
+                            title: 'Information',
+                            message: 'Đơn hàng đã được tạo thành công',
+                            icon: {
+                                color: 'info'
+                            },
+                            actions: {
+                                confirm: {
+                                    show: false
+                                },
+                                cancel: {
+                                    label: 'Xác nhận'
+                                }
+                            }
+                        })
+                    });
+                })
+            }
+        })
     }
 
-    submitCheckout() {
-        console.log('checkout');
-
-        if (this.checkoutForm.valid) {
-            console.log('valid');
-        }
-    }
-
-    removeCartItem(id: string) {
+    public removeCartItem(id: string) {
         this._fuseConfirmationService.open({
             title: 'Remove cart item?'
         }).afterClosed().subscribe(result => {

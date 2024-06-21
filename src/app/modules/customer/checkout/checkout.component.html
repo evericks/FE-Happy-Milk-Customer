@@ -11,14 +11,9 @@
                 <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
             </div>
         }
-        <!-- Title -->
-        <div class="text-2xl font-extrabold tracking-tight">Haha</div>
-
-        <!-- Actions -->
-        <div class="mt-6 flex shrink-0 justify-end gap-3 sm:ml-4 sm:mt-0"></div>
     </div>
     <ng-container *ngIf="cart$ | async as cart">
-        <div class="grid h-screen w-full grid-cols-3 gap-8">
+        <div class="mx-48 grid h-screen grid-cols-3 gap-8">
             <div class="col-span-2 overflow-y-scroll">
                 <div
                     class="flex h-full w-full flex-col overflow-y-scroll bg-white shadow-xl"
@@ -33,135 +28,145 @@
                             </h2>
                         </div>
 
-                        <div class="mt-8">
-                            <div class="flow-root">
-                                <ul
-                                    role="list"
-                                    class="-my-6 divide-y divide-gray-200"
-                                >
-                                    @for (
-                                        item of cart.cartItems;
-                                        track $index
-                                    ) {
-                                        <li class="flex py-6">
-                                            <div
-                                                class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
-                                            >
-                                                <img
-                                                    [src]="
-                                                        item.product
-                                                            .thumbnailUrl
-                                                    "
-                                                    alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
-                                                    class="h-full w-full object-cover object-center"
-                                                />
-                                            </div>
+                        <ng-container
+                            *ngIf="cart.cartItems.length > 0; else noCartItems"
+                        >
+                            <div class="mt-8">
+                                <div class="flow-root">
+                                    <ul
+                                        role="list"
+                                        class="-my-6 divide-y divide-gray-200"
+                                    >
+                                        @for (
+                                            item of cart.cartItems;
+                                            track $index
+                                        ) {
+                                            <li class="flex py-6">
+                                                <div
+                                                    class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
+                                                >
+                                                    <img
+                                                        [src]="
+                                                            item.product
+                                                                .thumbnailUrl
+                                                        "
+                                                        alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
+                                                        class="h-full w-full object-cover object-center"
+                                                    />
+                                                </div>
 
-                                            <div
-                                                class="ml-4 flex flex-1 flex-col"
-                                            >
-                                                <div>
-                                                    <div
-                                                        class="flex justify-between text-base font-medium text-gray-900"
-                                                    >
-                                                        <h3>
-                                                            <a href="#">{{
-                                                                item.product
-                                                                    .name
-                                                            }}</a>
-                                                        </h3>
-                                                        <p class="ml-4">
-                                                            {{
-                                                                item.product
-                                                                    .price *
-                                                                    item.quantity
-                                                                    | number
-                                                                        : '1.0-2'
-                                                            }}
+                                                <div
+                                                    class="ml-4 flex flex-1 flex-col"
+                                                >
+                                                    <div>
+                                                        <div
+                                                            class="flex justify-between text-base font-medium text-gray-900"
+                                                        >
+                                                            <h3>
+                                                                <a href="#">{{
+                                                                    item.product
+                                                                        .name
+                                                                }}</a>
+                                                            </h3>
+                                                            <p class="ml-4">
+                                                                {{
+                                                                    item.product
+                                                                        .price *
+                                                                        item.quantity
+                                                                        | number
+                                                                            : '1.0-2'
+                                                                }}
+                                                            </p>
+                                                        </div>
+                                                        <p
+                                                            class="mt-1 text-sm text-gray-500"
+                                                        >
+                                                            Remain Quantity
+                                                            <span
+                                                                class="font-semibold"
+                                                            >
+                                                                {{
+                                                                    item.product
+                                                                        .quantity
+                                                                }}
+                                                            </span>
                                                         </p>
                                                     </div>
-                                                    <p
-                                                        class="mt-1 text-sm text-gray-500"
+                                                    <div
+                                                        class="flex flex-1 items-end justify-between text-sm"
                                                     >
-                                                        Remain Quantity
-                                                        <span
-                                                            class="font-semibold"
+                                                        <mat-form-field
+                                                            class="fuse-mat-dense max-w-64"
+                                                            [subscriptSizing]="
+                                                                'dynamic'
+                                                            "
                                                         >
-                                                            {{
-                                                                item.product
-                                                                    .quantity
-                                                            }}
-                                                        </span>
-                                                    </p>
-                                                </div>
-                                                <div
-                                                    class="flex flex-1 items-end justify-between text-sm"
-                                                >
-                                                    <mat-form-field
-                                                        class="fuse-mat-dense max-w-64"
-                                                        [subscriptSizing]="
-                                                            'dynamic'
-                                                        "
-                                                    >
-                                                        <mat-icon
-                                                            class="icon-size-5"
-                                                            matPrefix
-                                                            [svgIcon]="
-                                                                'heroicons_solid:circle-stack'
-                                                            "
-                                                        ></mat-icon>
-                                                        <input
-                                                            matInput
-                                                            type="number"
-                                                            [min]="1"
-                                                            [max]="
-                                                                item.product
-                                                                    .quantity
-                                                            "
-                                                            [(ngModel)]="
-                                                                item.quantity
-                                                            "
-                                                            [autocomplete]="
-                                                                'off'
-                                                            "
-                                                            [placeholder]="
-                                                                'Phone'
-                                                            "
-                                                            (ngModelChange)="
-                                                                onQuantityChange(
-                                                                    cart.id,
-                                                                    item.id,
-                                                                    $event
-                                                                )
-                                                            "
-                                                            (keyup)="
-                                                                checkValidQuantity(
-                                                                    $event
-                                                                )
-                                                            "
-                                                        />
-                                                    </mat-form-field>
+                                                            <mat-icon
+                                                                class="icon-size-5"
+                                                                matPrefix
+                                                                [svgIcon]="
+                                                                    'heroicons_solid:circle-stack'
+                                                                "
+                                                            ></mat-icon>
+                                                            <input
+                                                                matInput
+                                                                type="number"
+                                                                [min]="1"
+                                                                [max]="
+                                                                    item.product
+                                                                        .quantity
+                                                                "
+                                                                [(ngModel)]="
+                                                                    item.quantity
+                                                                "
+                                                                [autocomplete]="
+                                                                    'off'
+                                                                "
+                                                                [placeholder]="
+                                                                    'Quantity'
+                                                                "
+                                                                (ngModelChange)="
+                                                                    onQuantityChange(
+                                                                        cart.id,
+                                                                        item.id,
+                                                                        $event
+                                                                    )
+                                                                "
+                                                            />
+                                                        </mat-form-field>
 
-                                                    <div class="flex">
-                                                        <button
-                                                            (click)="
-                                                                removeCartItem(
-                                                                    item.id
-                                                                )
-                                                            "
-                                                            type="button"
-                                                            class="font-medium text-indigo-600 hover:text-indigo-500"
-                                                        >
-                                                            Remove
-                                                        </button>
+                                                        <div class="flex">
+                                                            <button
+                                                                (click)="
+                                                                    removeCartItem(
+                                                                        item.id
+                                                                    )
+                                                                "
+                                                                type="button"
+                                                                class="font-medium text-indigo-600 hover:text-indigo-500"
+                                                            >
+                                                                Remove
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                    }
-                                </ul>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
+                        </ng-container>
+                        <ng-template #noCartItems>
+                            <fuse-alert
+                                class="mt-8"
+                                [appearance]="'outline'"
+                                [showIcon]="false"
+                                [type]="'info'"
+                            >
+                                Giỏ hàng của bạn đang trống, hãy thêm sản phẩm
+                                vào giỏ hàng.
+                            </fuse-alert>
+                        </ng-template>
                     </div>
                 </div>
             </div>
@@ -243,7 +248,6 @@
                             >
                             <mat-radio-button
                                 class="example-radio-button"
-                                [disabled]="true"
                                 [value]="'VNPay'"
                                 >VNPay</mat-radio-button
                             >
