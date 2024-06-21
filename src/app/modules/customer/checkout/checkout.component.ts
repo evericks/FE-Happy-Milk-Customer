@@ -62,7 +62,7 @@ export class CheckoutComponent implements OnInit {
             amount: [null, [Validators.required]],
             receiver: [null, [Validators.required]],
             address: [null, [Validators.required, Validators.minLength(10)]],
-            phone: [null, [Validators.required, Validators.minLength(10)]],
+            phone: [null, [Validators.required, Validators.pattern('^(03|05|07|08|09)[0-9]{8}$')]],
             paymentMethod: ['Cash', [Validators.required]],
             orderDetails: [null, [Validators.required]]
         });
