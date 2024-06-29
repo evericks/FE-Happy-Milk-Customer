@@ -25,6 +25,10 @@ export class AuthService {
         return localStorage.getItem('accessToken') ?? '';
     }
 
+    get isAuthenticated(): boolean {
+        return this._authenticated;
+    }
+
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------

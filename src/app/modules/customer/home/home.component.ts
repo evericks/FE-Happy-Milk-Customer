@@ -1,20 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { FuseAlertComponent } from '@fuse/components/alert';
 import { FuseCardComponent } from '@fuse/components/card';
+import { AuthService } from 'app/core/auth/auth.service';
 import { CartService } from 'app/layout/common/cart/cart.service';
 import { CheckboxListComponent } from 'app/modules/custom-components/checkbox-list/checkbox-list.box.component';
 import { Category } from 'app/types/category.type';
 import { Product } from 'app/types/product.type';
-import { Observable, Subject, debounceTime, filter, map, switchMap, takeUntil } from 'rxjs';
+import { Observable, Subject, debounceTime, filter, map, of, switchMap, takeUntil } from 'rxjs';
 import { CategoryService } from '../category/category.service';
 import { ProductService } from '../product/product.service';
-import { FuseAlertComponent } from '@fuse/components/alert';
 
 @Component({
     selector: 'home',
@@ -24,7 +25,7 @@ import { FuseAlertComponent } from '@fuse/components/alert';
     imports: [CommonModule, MatCheckboxModule, FormsModule, ReactiveFormsModule, MatFormFieldModule,
         MatIconModule, MatInputModule, CheckboxListComponent, FuseCardComponent, RouterModule, FuseAlertComponent]
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
 
     flashMessage: 'success' | 'error' | null = null;
     message: string = null;
@@ -46,6 +47,8 @@ export class HomeComponent implements OnInit {
         private _productService: ProductService,
         private _categoryService: CategoryService,
         private _cartService: CartService,
+        private _authService: AuthService,
+        private _router: Router
     ) { }
 
     ngOnInit(): void {
@@ -57,6 +60,9 @@ export class HomeComponent implements OnInit {
         this.categories$ = this._categoryService.categories$;
 
         this.initFilterForm();
+    }
+
+    ngAfterViewInit(): void {
         this.subcribeFilterForm();
     }
 
@@ -76,8 +82,10 @@ export class HomeComponent implements OnInit {
             debounceTime(500),
             switchMap((filter) => {
                 this.isLoading = true;
-                let result = this._productService.getProducts(filter);
-                return result;
+                console.log(filter);
+
+                this._productService.getProducts(filter).subscribe();
+                return of(true);
             }),
             map(() => {
                 this.isLoading = false;
@@ -86,20 +94,23 @@ export class HomeComponent implements OnInit {
     }
 
     addToCart(productId: string) {
-        var item = {
-            productId: productId,
-            quantity: 1
-        }
-        this._cartService.addToCart(item).subscribe(result => {
+        if (this._authService.isAuthenticated) {
+            var item = {
+                productId: productId,
+                quantity: 1
+            }
+            this._cartService.addToCart(item).subscribe(result => {
 
-        }, error => {
-            this.showFlashMessage('error', error.error, 3000);
-        });
+            }, error => {
+                this.showFlashMessage('error', error.error, 3000);
+            });
+        } else {
+            this._router.navigate(['/sign-in']);
+        }
     }
 
     onCategoriesChanged(selectedCheckbox: string[]) {
         this.filterForm.controls['categories'].setValue(selectedCheckbox);
-        console.log(this.filterForm.value);
     }
 
     private showFlashMessage(type: 'success' | 'error', message: string, time: number): void {

@@ -9,7 +9,9 @@ export class CartService {
 
     private _cart: BehaviorSubject<Cart | null> = new BehaviorSubject(null);
 
-    constructor(private _httpClient: HttpClient) { }
+    constructor(
+        private _httpClient: HttpClient
+    ) { }
 
     /**
  * Getter for cart
@@ -88,10 +90,10 @@ export class CartService {
                     // Find the index of the deleted product
                     const index = cart.cartItems.findIndex(item => item.id === id);
 
-                    // Delete the product
+                    // Delete the cart
                     cart.cartItems.splice(index, 1);
 
-                    // Update the invoices
+                    // Update the cart
                     this._cart.next(cart);
 
                     // Return the deleted status

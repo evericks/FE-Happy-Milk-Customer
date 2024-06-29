@@ -13,10 +13,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 import { Subject, takeUntil } from 'rxjs';
+import { CartComponent } from '../cart/cart.component';
+import { CartService } from '../cart/cart.service';
 
 @Component({
     selector: 'user',
@@ -31,6 +33,9 @@ import { Subject, takeUntil } from 'rxjs';
         MatIconModule,
         NgClass,
         MatDividerModule,
+        CartComponent,
+        MatButtonModule,
+        RouterModule
     ],
 })
 export class UserComponent implements OnInit, OnDestroy {
@@ -49,8 +54,9 @@ export class UserComponent implements OnInit, OnDestroy {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
-        private _userService: UserService
-    ) {}
+        private _userService: UserService,
+        private _cartService: CartService
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -65,10 +71,13 @@ export class UserComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: User) => {
                 this.user = user;
-
+                if (user) {
+                    this._cartService.getCart().subscribe();
+                }
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
+
     }
 
     /**

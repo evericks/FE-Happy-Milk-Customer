@@ -3,6 +3,7 @@ import { initialDataResolver } from 'app/app.resolvers';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
+import { AllowAllGuard } from './core/auth/guards/allowAll.guard';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -33,7 +34,7 @@ export const appRoutes: Route[] = [
             { path: 'forgot-password', loadChildren: () => import('app/modules/auth/forgot-password/forgot-password.routes') },
             { path: 'reset-password', loadChildren: () => import('app/modules/auth/reset-password/reset-password.routes') },
             { path: 'sign-in', loadChildren: () => import('app/modules/auth/sign-in/sign-in.routes') },
-            { path: 'sign-up', loadChildren: () => import('app/modules/auth/sign-up/sign-up.routes') }
+            { path: 'sign-up', loadChildren: () => import('app/modules/auth/sign-up/sign-up.routes') },
         ]
     },
 
@@ -78,6 +79,21 @@ export const appRoutes: Route[] = [
         ]
     },
 
+    // Guest routes
+    {
+        path: '',
+        canActivate: [AllowAllGuard],
+        canActivateChild: [AllowAllGuard],
+        component: LayoutComponent,
+        resolve: {
+            initialData: initialDataResolver
+        },
+        children: [
+            { path: 'home', loadChildren: () => import('app/modules/customer/home/home.routes') },
+            { path: 'products', loadChildren: () => import('app/modules/customer/product/product.routes') },
+        ]
+    },
+
     // Customer routes
     {
         path: '',
@@ -88,8 +104,6 @@ export const appRoutes: Route[] = [
             initialData: initialDataResolver
         },
         children: [
-            { path: 'home', loadChildren: () => import('app/modules/customer/home/home.routes') },
-            { path: 'products', loadChildren: () => import('app/modules/customer/product/product.routes') },
             { path: 'checkout', loadChildren: () => import('app/modules/customer/checkout/checkout.routes') },
         ]
     }

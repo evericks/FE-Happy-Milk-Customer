@@ -11,6 +11,8 @@ import { ProductService } from '../product.service';
 import { CartService } from 'app/layout/common/cart/cart.service';
 import { Cart } from 'app/types/cart.type';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from 'app/core/auth/auth.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -30,7 +32,9 @@ export class ProductDetailComponent implements OnInit {
     constructor(
         private _productService: ProductService,
         private _cartService: CartService,
-        private _fuseConfirmationService: FuseConfirmationService
+        private _fuseConfirmationService: FuseConfirmationService,
+        private _authService: AuthService,
+        private _router: Router
     ) {
     }
 
@@ -39,25 +43,31 @@ export class ProductDetailComponent implements OnInit {
     }
 
     addToCart(productId: string) {
-        var item = {
-            productId: productId,
-            quantity: this.quantity
-        }
-        this._cartService.addToCart(item).subscribe(() => {
+        if (this._authService.isAuthenticated) {
 
-        }, error => {
-            this._fuseConfirmationService.open({
-                title: 'Warning',
-                message: error.error,
-                actions: {
-                    confirm: {
-                        show: false
+            var item = {
+                productId: productId,
+                quantity: this.quantity
+            }
+            this._cartService.addToCart(item).subscribe(() => {
+
+            }, error => {
+                this._fuseConfirmationService.open({
+                    title: 'Warning',
+                    message: error.error,
+                    actions: {
+                        confirm: {
+                            show: false
+                        }
+                    },
+                    icon: {
+                        color: 'info'
                     }
-                },
-                icon: {
-                    color: 'info'
-                }
+                });
             });
-        });
+        } else {
+            this._router.navigate(['/sign-in']);
+        }
     }
+
 }

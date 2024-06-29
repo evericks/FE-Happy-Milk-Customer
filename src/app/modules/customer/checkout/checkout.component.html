@@ -180,125 +180,131 @@
                             SHIPPING INFORMATION
                         </h2>
                     </div>
-                    <div
-                        class="mt-4 flex flex-col gap-4"
-                        [formGroup]="checkoutForm"
-                    >
-                        <mat-form-field
-                            class="fuse-mat-dense fuse-mat-rounded w-full"
-                            [subscriptSizing]="'dynamic'"
+                    <ng-container *ngIf="checkoutForm">
+                        <div
+                            class="mt-4 flex flex-col gap-4"
+                            [formGroup]="checkoutForm"
                         >
-                            <mat-icon
-                                class="icon-size-5"
-                                matPrefix
-                                [svgIcon]="'heroicons_solid:user'"
-                            ></mat-icon>
-                            <input
-                                matInput
-                                [formControlName]="'receiver'"
-                                [autocomplete]="'off'"
-                                [placeholder]="'Receiver'"
-                            />
-                        </mat-form-field>
-
-                        <mat-form-field
-                            class="fuse-mat-dense fuse-mat-rounded w-full"
-                            [subscriptSizing]="'dynamic'"
-                        >
-                            <mat-icon
-                                class="icon-size-5"
-                                matPrefix
-                                [svgIcon]="'heroicons_solid:truck'"
-                            ></mat-icon>
-                            <input
-                                matInput
-                                [formControlName]="'address'"
-                                [autocomplete]="'off'"
-                                [placeholder]="'Address'"
-                            />
-                        </mat-form-field>
-
-                        <mat-form-field
-                            class="fuse-mat-dense fuse-mat-rounded w-full"
-                            [subscriptSizing]="'dynamic'"
-                        >
-                            <mat-icon
-                                class="icon-size-5"
-                                matPrefix
-                                [svgIcon]="'heroicons_solid:phone'"
-                            ></mat-icon>
-                            <input
-                                matInput
-                                [formControlName]="'phone'"
-                                [autocomplete]="'off'"
-                                [placeholder]="'Phone Ex. 03, 05, 07, 08, 09'"
-                            />
-                        </mat-form-field>
-
-                        <mat-radio-group
-                            aria-labelledby="example-radio-group-label"
-                            color="primary"
-                            class="example-radio-group flex justify-between gap-2"
-                            [formControlName]="'paymentMethod'"
-                        >
-                            <mat-radio-button
-                                class="example-radio-button"
-                                [value]="'Cash'"
-                                >Cash</mat-radio-button
+                            <mat-form-field
+                                class="fuse-mat-dense fuse-mat-rounded w-full"
+                                [subscriptSizing]="'dynamic'"
                             >
-                            <mat-radio-button
-                                class="example-radio-button"
-                                [value]="'VNPay'"
-                                >VNPay</mat-radio-button
-                            >
-                            <mat-radio-button
-                                class="example-radio-button"
-                                [disabled]="true"
-                                [value]="'Visa'"
-                                >Visa</mat-radio-button
-                            >
-                        </mat-radio-group>
+                                <mat-icon
+                                    class="icon-size-5"
+                                    matPrefix
+                                    [svgIcon]="'heroicons_solid:user'"
+                                ></mat-icon>
+                                <input
+                                    matInput
+                                    [formControlName]="'receiver'"
+                                    [autocomplete]="'off'"
+                                    [placeholder]="'Receiver'"
+                                />
+                            </mat-form-field>
 
-                        <div class="mt-8 border-t border-gray-200">
-                            <div
-                                class="mt-4 flex justify-between text-base font-medium text-gray-900"
+                            <mat-form-field
+                                class="fuse-mat-dense fuse-mat-rounded w-full"
+                                [subscriptSizing]="'dynamic'"
                             >
-                                <p>Subtotal</p>
-                                <p>{{ totalPrice | number: '1.0-2' }}</p>
-                            </div>
-                            <p class="mt-0.5 text-sm text-gray-500">
-                                Shipping and taxes calculated at checkout.
-                            </p>
-                            <div class="mt-6">
-                                <button
-                                    [disabled]="!checkoutForm.valid"
-                                    (click)="submitCheckout()"
-                                    type="submit"
-                                    mat-raised-button
-                                    color="primary"
-                                    class="w-full"
+                                <mat-icon
+                                    class="icon-size-5"
+                                    matPrefix
+                                    [svgIcon]="'heroicons_solid:truck'"
+                                ></mat-icon>
+                                <input
+                                    matInput
+                                    [formControlName]="'address'"
+                                    [autocomplete]="'off'"
+                                    [placeholder]="'Address'"
+                                />
+                            </mat-form-field>
+
+                            <mat-form-field
+                                class="fuse-mat-dense fuse-mat-rounded w-full"
+                                [subscriptSizing]="'dynamic'"
+                            >
+                                <mat-icon
+                                    class="icon-size-5"
+                                    matPrefix
+                                    [svgIcon]="'heroicons_solid:phone'"
+                                ></mat-icon>
+                                <input
+                                    matInput
+                                    [formControlName]="'phone'"
+                                    [autocomplete]="'off'"
+                                    [placeholder]="
+                                        'Phone Ex. 03, 05, 07, 08, 09'
+                                    "
+                                />
+                            </mat-form-field>
+
+                            <mat-radio-group
+                                aria-labelledby="example-radio-group-label"
+                                color="primary"
+                                class="example-radio-group flex justify-between gap-2"
+                                [formControlName]="'paymentMethod'"
+                            >
+                                <mat-radio-button
+                                    class="example-radio-button"
+                                    [value]="'Cash'"
+                                    >Cash</mat-radio-button
                                 >
-                                    Checkout
-                                </button>
-                            </div>
-                            <div
-                                class="mt-6 flex justify-center text-center text-sm text-gray-500"
-                            >
-                                <p>
-                                    or
-                                    <a
-                                        [routerLink]="['/home']"
-                                        routerLinkActive="router-link-active"
-                                        type="button"
-                                        class="font-medium text-indigo-600 hover:text-indigo-500"
-                                    >
-                                        Continue Shopping
-                                        <span aria-hidden="true"> &rarr;</span>
-                                    </a>
+                                <mat-radio-button
+                                    class="example-radio-button"
+                                    [value]="'VNPay'"
+                                    >VNPay</mat-radio-button
+                                >
+                                <mat-radio-button
+                                    class="example-radio-button"
+                                    [disabled]="true"
+                                    [value]="'Visa'"
+                                    >Visa</mat-radio-button
+                                >
+                            </mat-radio-group>
+
+                            <div class="mt-8 border-t border-gray-200">
+                                <div
+                                    class="mt-4 flex justify-between text-base font-medium text-gray-900"
+                                >
+                                    <p>Subtotal</p>
+                                    <p>{{ totalPrice | number: '1.0-2' }}</p>
+                                </div>
+                                <p class="mt-0.5 text-sm text-gray-500">
+                                    Shipping and taxes calculated at checkout.
                                 </p>
+                                <div class="mt-6">
+                                    <button
+                                        [disabled]="!checkoutForm.valid"
+                                        (click)="submitCheckout()"
+                                        type="submit"
+                                        mat-raised-button
+                                        color="primary"
+                                        class="w-full"
+                                    >
+                                        Checkout
+                                    </button>
+                                </div>
+                                <div
+                                    class="mt-6 flex justify-center text-center text-sm text-gray-500"
+                                >
+                                    <p>
+                                        or
+                                        <a
+                                            [routerLink]="['/home']"
+                                            routerLinkActive="router-link-active"
+                                            type="button"
+                                            class="font-medium text-indigo-600 hover:text-indigo-500"
+                                        >
+                                            Continue Shopping
+                                            <span aria-hidden="true">
+                                                &rarr;</span
+                                            >
+                                        </a>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </ng-container>
                 </div>
             </div>
         </div>

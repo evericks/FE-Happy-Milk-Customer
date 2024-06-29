@@ -7,13 +7,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { RouterModule } from '@angular/router';
+import { FuseAlertComponent } from '@fuse/components/alert';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { CartService } from 'app/layout/common/cart/cart.service';
 import { Cart } from 'app/types/cart.type';
-import { Observable, Subject, catchError, debounceTime, filter, map, of, switchMap, take } from 'rxjs';
+import { Observable, Subject, catchError, debounceTime, filter, of, switchMap } from 'rxjs';
 import { OrderService } from '../order/order.service';
-import { forEach } from 'lodash';
-import { FuseAlertComponent } from '@fuse/components/alert';
 
 @Component({
     selector: 'checkout',
@@ -27,11 +26,9 @@ export class CheckoutComponent implements OnInit {
     private quantityChangeSubject = new Subject<{ cartId: string, cartItemId: string, quantity: any }>();
 
     cart$: Observable<Cart>;
-    totalPrice: number = 0;
+    totalPrice: number;
     cartItems: any[] = [];
-    quantity: number = 3;
-    paymentMethod: string;
-    paymentMethods: string[] = ['VNPay', 'Momo', 'Cash', 'Visa'];
+    quantity: number;
     isLoading: boolean = false;
     checkoutForm: UntypedFormGroup;
     /**
