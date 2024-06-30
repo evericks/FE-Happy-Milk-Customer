@@ -82,8 +82,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
             debounceTime(500),
             switchMap((filter) => {
                 this.isLoading = true;
-                console.log(filter);
-
                 this._productService.getProducts(filter).subscribe();
                 return of(true);
             }),

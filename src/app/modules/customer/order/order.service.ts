@@ -36,7 +36,7 @@ export class OrderService {
 
     getOrders(filter: any = {}):
         Observable<{ pagination: Pagination; data: Order[] }> {
-        return this._httpClient.post<{ pagination: Pagination; data: Order[] }>('/api/orders/customers', filter).pipe(
+        return this._httpClient.post<{ pagination: Pagination; data: Order[] }>('/api/customers/orders', filter).pipe(
             tap((response) => {
                 this._pagination.next(response.pagination);
                 this._orders.next(response.data);

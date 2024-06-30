@@ -1,0 +1,66 @@
+<div
+    class="bg-card flex min-w-0 flex-auto flex-col dark:bg-transparent sm:absolute sm:inset-0 sm:overflow-hidden"
+>
+    <!-- Header -->
+    <div
+        class="relative flex flex-0 flex-col border-b px-6 py-8 sm:flex-row sm:items-center sm:justify-between md:px-8"
+    >
+        <!-- Loader -->
+        @if (isLoading) {
+            <div class="absolute inset-x-0 bottom-0">
+                <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+            </div>
+        }
+    </div>
+    <div class="w-full overflow-y-auto">
+        <div class="mx-48 my-5 grid grid-cols-5 gap-8">
+            <ng-container *ngFor="let order of orders$ | async as orders">
+                <fuse-card
+                    class="filter-info flex w-full flex-col items-center p-8"
+                >
+                    <mat-icon
+                        [class]="(order.status | orderStatus).class"
+                        [svgIcon]="(order.status | orderStatus).icon"
+                    ></mat-icon>
+                    <div
+                        class="mt-6 text-center text-2xl font-semibold leading-tight"
+                    >
+                        {{ order.amount | number: '1.0-2' }} VNĐ
+                    </div>
+                    <div class="text-secondary mb-8 mt-1 text-center">
+                        {{ order.createAt | date: 'dd-MM-YYYY' }}
+                    </div>
+                    <div class="flex items-center">
+                        <ng-container
+                            *ngFor="
+                                let orderDetail of order.orderDetails;
+                                let i = index
+                            "
+                        >
+                            <ng-container *ngIf="i < 3">
+                                <img
+                                    class="text-card ring-bg-card mx-1 h-8 w-8 rounded-full border-2 border-blue-500 ring-2"
+                                    [src]="orderDetail.product.thumbnailUrl"
+                                    alt="Card cover image"
+                                />
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                    <div *ngIf="order.orderDetails.length > 3">
+                        <div class="text-secondary mt-2 text-sm font-medium">
+                            +{{ order.orderDetails.length - 3 }} more
+                        </div>
+                    </div>
+                    <a
+                        class="mt-8 px-6"
+                        mat-flat-button
+                        [color]="'primary'"
+                        [routerLink]="['./', order.id]"
+                    >
+                        View Detail
+                    </a>
+                </fuse-card>
+            </ng-container>
+        </div>
+    </div>
+</div>
