@@ -135,23 +135,34 @@ export class CheckoutComponent implements OnInit {
             }
         }).afterClosed().subscribe(result => {
             if (result === 'confirmed') {
-                this._orderService.createOrder(this.checkoutForm.value).subscribe(() => {
+                this._orderService.createOrder(this.checkoutForm.value).subscribe(order => {
+                    let totalPrice = this.totalPrice;
                     this._cartService.getCart().subscribe(() => {
-                        this._fuseConfirmationService.open({
-                            title: 'Information',
-                            message: 'Đơn hàng đã được tạo thành công',
-                            icon: {
-                                color: 'info'
-                            },
-                            actions: {
-                                confirm: {
-                                    show: false
+                        if (this.checkoutForm.controls['paymentMethod'].value === 'VNPay') {
+                            this._orderService.callVNPay({
+                                amount: totalPrice,
+                                orderId: order.id
+                            }).subscribe(response => {
+                                window.location.href = response.url;
+                            });
+                        } else {
+                            this._fuseConfirmationService.open({
+                                title: 'Information',
+                                message: 'Đơn hàng đã được tạo thành công',
+                                icon: {
+                                    color: 'info'
                                 },
-                                cancel: {
-                                    label: 'Xác nhận'
+                                actions: {
+                                    confirm: {
+                                        show: false
+                                    },
+                                    cancel: {
+                                        label: 'Xác nhận'
+                                    }
                                 }
-                            }
-                        })
+                            })
+                        }
+                        this.checkoutForm.reset();
                     });
                 }, error => {
                     this._fuseConfirmationService.open({

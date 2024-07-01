@@ -91,7 +91,7 @@ export const appRoutes: Route[] = [
         children: [
             { path: 'home', loadChildren: () => import('app/modules/customer/home/home.routes') },
             { path: 'products', loadChildren: () => import('app/modules/customer/product/product.routes') },
-            { path: 'orders', loadChildren: () => import('app/modules/customer/order/order.routes') },
+            { path: 'payments', loadChildren: () => import('app/modules/customer/payment/payment.routes') },
         ]
     },
 
@@ -106,6 +106,7 @@ export const appRoutes: Route[] = [
         },
         children: [
             { path: 'checkout', loadChildren: () => import('app/modules/customer/checkout/checkout.routes') },
+            { path: 'orders', loadChildren: () => import('app/modules/customer/order/order.routes') },
         ]
     }
 ];

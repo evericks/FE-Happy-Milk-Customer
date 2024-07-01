@@ -82,6 +82,20 @@ export class OrderService {
     }
 
     /**
+* Call VNPay
+*/
+    callVNPay(data) {
+        return this.orders$.pipe(
+            take(1),
+            switchMap(() => this._httpClient.post<any>('/api/payments/request', data).pipe(
+                map((url) => {
+                    return url;
+                })
+            ))
+        )
+    }
+
+    /**
     * Update order
     */
     updateOrder(id: string, data) {

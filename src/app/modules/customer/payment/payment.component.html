@@ -1,0 +1,69 @@
+<ng-container *ngIf="isSuccessfull">
+    <div class="flexbg-gray-100 w-full">
+        <div class="mx-auto my-10 max-w-lg rounded-lg bg-white p-5 shadow-md">
+            <div class="flex w-full justify-center">
+                <mat-icon
+                    class="mx-auto my-6 h-16 w-16 text-green-600"
+                    svgIcon="heroicons_outline:check-circle"
+                ></mat-icon>
+            </div>
+            <h3
+                class="text-center text-base font-semibold text-gray-900 md:text-2xl"
+            >
+                Thanh Toán Thành Công!
+            </h3>
+            <div class="mt-5">
+                <p class="mt-2 text-gray-600">
+                    Chúng tôi xin thông báo rằng thanh toán của quý khách hàng
+                    đã được xử lý thành công. Chúng tôi rất biết ơn sự hỗ trợ
+                    của quý khách hàng và hy vọng rằng quý khách đã có trải
+                    nghiệm mua sắm/an toàn và trọn vẹn.
+                </p>
+                <ul class="px-8 text-sm font-bold">
+                    <li>Đơn hàng: {{ paymentParams.vnp_OrderInfo }}</li>
+                    <li>Số tiền: {{ amout | number: '1.0-2' }} VNĐ</li>
+                    <li>Trạng thái: Thành công</li>
+                </ul>
+                <p class="mt-2 text-gray-600">
+                    Cảm ơn quý khách đã chọn dịch vụ của chúng tôi. Chúng tôi
+                    mong sớm được phục vụ quý khách hàng một lần nữa.
+                </p>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="!isSuccessfull">
+    <div class="flexbg-gray-100 w-full">
+        <div class="mx-auto my-10 max-w-lg rounded-lg bg-white p-5 shadow-md">
+            <div class="flex w-full justify-center">
+                <mat-icon
+                    class="mx-auto my-6 h-16 w-16 text-red-600"
+                    svgIcon="heroicons_outline:x-circle"
+                ></mat-icon>
+            </div>
+            <h3
+                class="text-center text-base font-semibold text-gray-900 md:text-2xl"
+            >
+                Thanh Toán Thất Bại!
+            </h3>
+            <div class="mt-5">
+                <p class="mt-2 text-gray-600">
+                    Chúng tôi xin thông báo rằng thanh toán của quý khách hàng
+                    không được xử lý thành công. Chúng tôi rất biết ơn sự hỗ trợ
+                    của quý khách hàng và hy vọng rằng quý khách đã có trải
+                    nghiệm mua sắm/an toàn và trọn vẹn.
+                </p>
+                <ul class="px-8 text-sm font-bold">
+                    <li>Đơn hàng: {{ paymentParams.vnp_OrderInfo }}</li>
+                    <li>Số tiền: {{ amout | number: '1.0-2' }} VNĐ</li>
+                    <li>Trạng thái: Thất bại</li>
+                </ul>
+                <p class="mt-2 text-gray-600">
+                    Cảm ơn quý khách đã chọn dịch vụ của chúng tôi. Chúng tôi
+                    mong sớm được phục vụ quý khách hàng một lần nữa.
+                </p>
+            </div>
+        </div>
+    </div>
+</ng-container>
