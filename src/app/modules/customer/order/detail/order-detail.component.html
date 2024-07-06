@@ -15,14 +15,11 @@
     <div class="w-full overflow-y-auto">
         <div class="mx-64 my-5">
             <ng-container *ngIf="order$ | async as order">
-                <div
-                    class="inset-0 min-w-0 overflow-auto text-center print:overflow-visible"
-                    cdkScrollable
-                >
+                <div class="w-full" cdkScrollable>
                     <!-- Main -->
-                    <div class="inline-block text-left print:p-0">
+                    <div class="print:p-0">
                         <!-- Invoice -->
-                        <div class="w-240 min-w-240 rounded-2xl p-8">
+                        <div class="w-full p-8">
                             <div class="flex items-start">
                                 <div class="flex flex-col">
                                     <div
@@ -195,6 +192,32 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="flex w-full gap-8 p-8">
+                    <button
+                        mat-raised-button
+                        color="warn"
+                        [disabled]="order.status != 'Pending'"
+                        class="w-full"
+                    >
+                        CANCEL ORDER
+                    </button>
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        [disabled]="order.status != 'Delivering'"
+                        class="w-full"
+                    >
+                        Received
+                    </button>
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        [disabled]="order.status != 'Completed'"
+                        class="w-full"
+                    >
+                        FEEDBACK
+                    </button>
                 </div>
             </ng-container>
         </div>
