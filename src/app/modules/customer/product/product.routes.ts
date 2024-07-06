@@ -9,7 +9,6 @@ export default [
         component: ProductDetailComponent,
         resolve: {
             product: (route: ActivatedRouteSnapshot) => inject(ProductService).getProductById(route.params['id']),
-
         },
     },
 ] as Routes;

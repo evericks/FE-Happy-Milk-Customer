@@ -92,6 +92,7 @@ export const appRoutes: Route[] = [
             { path: 'home', loadChildren: () => import('app/modules/customer/home/home.routes') },
             { path: 'products', loadChildren: () => import('app/modules/customer/product/product.routes') },
             { path: 'payments', loadChildren: () => import('app/modules/customer/payment/payment.routes') },
+            { path: 'messages', loadChildren: () => import('app/modules/customer/message/message.rotues') },
         ]
     },
 
