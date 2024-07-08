@@ -1,0 +1,16 @@
+<div class="star-rating flex">
+    <ng-container *ngFor="let star of stars">
+        <ng-container *ngIf="star">
+            <mat-icon
+                class="text-yellow-500 icon-size-4"
+                svgIcon="heroicons_solid:star"
+            ></mat-icon>
+        </ng-container>
+        <ng-container *ngIf="!star">
+            <mat-icon
+                class="text-gray-400 icon-size-4"
+                svgIcon="heroicons_outline:star"
+            ></mat-icon>
+        </ng-container>
+    </ng-container>
+</div>

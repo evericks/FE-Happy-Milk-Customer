@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Feedback } from 'app/types/feedback.type';
 import { Pagination } from 'app/types/pagination.type';
 import { Product } from 'app/types/product.type';
 import { BehaviorSubject, Observable, map, switchMap, take, tap } from 'rxjs';

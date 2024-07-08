@@ -14,5 +14,6 @@ export interface Product {
     quantity: number,
     sold: number,
     status: string,
+    rating: number,
     productCategories: ProductCategory[]
 }

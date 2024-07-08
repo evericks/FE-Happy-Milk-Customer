@@ -199,6 +199,7 @@
                         color="warn"
                         [disabled]="order.status != 'Pending'"
                         class="w-full"
+                        (click)="cancelOrder(order.id)"
                     >
                         CANCEL ORDER
                     </button>
@@ -207,13 +208,15 @@
                         color="primary"
                         [disabled]="order.status != 'Delivering'"
                         class="w-full"
+                        (click)="completeOrder(order.id)"
                     >
-                        Received
+                        RECEIVED
                     </button>
                     <button
                         mat-raised-button
                         color="primary"
                         [disabled]="order.status != 'Completed'"
+                        [routerLink]="['reviews']"
                         class="w-full"
                     >
                         FEEDBACK

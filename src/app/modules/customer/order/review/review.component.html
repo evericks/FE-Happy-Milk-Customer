@@ -1,0 +1,134 @@
+<div
+    class="bg-card flex min-w-0 flex-auto flex-col dark:bg-transparent sm:absolute sm:inset-0 sm:overflow-hidden"
+>
+    <!-- Header -->
+    <div
+        class="relative flex flex-0 flex-col border-b px-6 py-8 sm:flex-row sm:items-center sm:justify-between md:px-8"
+    >
+        <!-- Loader -->
+        @if (isLoading) {
+            <div class="absolute inset-x-0 bottom-0">
+                <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+            </div>
+        }
+    </div>
+    <div class="w-full overflow-y-auto">
+        <div class="mx-64 my-5">
+            <ng-container *ngIf="order$ | async as order">
+                <div *ngFor="let item of order.orderDetails; let i = index">
+                    <div class="flex flex-col gap-3">
+                        <div
+                            class="bg-card mt-16 grid grid-cols-12 gap-x-1 rounded-md border border-gray-300 p-8"
+                        >
+                            <!-- Item -->
+                            <div class="col-span-9">
+                                <div class="grid w-full grid-cols-12 gap-4">
+                                    <div class="col-span-2 w-full">
+                                        <div
+                                            class="h-16 w-16 border border-gray-200"
+                                        >
+                                            <img
+                                                [src]="
+                                                    item.product.thumbnailUrl
+                                                "
+                                                alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
+                                                class="h-full w-full object-cover object-center"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="col-span-10 w-full">
+                                        <div class="text-lg font-medium">
+                                            {{ item.product.name }}
+                                        </div>
+                                        <div
+                                            class="text-secondary mt-2 w-full truncate text-md"
+                                        >
+                                            {{ item.product.description }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-span-3 self-center text-right">
+                                {{
+                                    item.price * item.quantity | number: '1.0-2'
+                                }}
+                                VNĐ
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="!item.isReviewed; else reviewed">
+                            <ng-container *ngIf="reviewForms.length > 0">
+                                <div class="grid grid-cols-3">
+                                    <div class="col-span-2"></div>
+                                    <div
+                                        class="col-span-1 flex flex-col gap-3"
+                                        [formGroup]="reviewForms[i]"
+                                    >
+                                        <div class="flex">
+                                            <ng-container
+                                                *ngFor="let star of stars"
+                                            >
+                                                <button (click)="rate(i, star)">
+                                                    <mat-icon
+                                                        *ngIf="
+                                                            star <= ratings[i]
+                                                        "
+                                                        svgIcon="heroicons_outline:star"
+                                                        class="text-yellow-500"
+                                                    ></mat-icon>
+                                                    <mat-icon
+                                                        *ngIf="
+                                                            star > ratings[i]
+                                                        "
+                                                        svgIcon="heroicons_outline:star"
+                                                        class="text-gray-400"
+                                                    ></mat-icon>
+                                                </button>
+                                            </ng-container>
+                                        </div>
+
+                                        <mat-form-field
+                                            class="fuse-mat-dense fuse-mat-rounded w-full"
+                                            [subscriptSizing]="'dynamic'"
+                                        >
+                                            <textarea
+                                                matInput
+                                                [formControlName]="'message'"
+                                                [autocomplete]="'off'"
+                                                [placeholder]="'Message'"
+                                            ></textarea>
+                                        </mat-form-field>
+                                        <button
+                                            mat-raised-button
+                                            color="primary"
+                                            type="submit"
+                                            (click)="onSubmit(i, item.id)"
+                                        >
+                                            REVIEW
+                                        </button>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                        <ng-template #reviewed>
+                            <div class="grid grid-cols-3">
+                                <div class="col-span-2"></div>
+                                <div class="col-span-1">
+                                    <fuse-alert
+                                        [appearance]="'outline'"
+                                        [showIcon]="false"
+                                        [type]="'info'"
+                                    >
+                                        The product has been reviewed.
+                                        <strong>Thanks</strong> for your
+                                        feedback.
+                                    </fuse-alert>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>
