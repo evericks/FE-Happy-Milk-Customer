@@ -3,7 +3,7 @@
 >
     <!-- Header -->
     <div
-        class="relative flex flex-0 flex-col border-b px-6 py-8 sm:flex-row sm:items-center sm:justify-between md:px-8"
+        class="relative flex flex-0 flex-col sm:flex-row sm:items-center sm:justify-between"
     >
         <!-- Loader -->
         @if (isLoading) {
@@ -12,7 +12,9 @@
             </div>
         }
         <!-- Actions -->
-        <div class="mt-6 flex shrink-0 justify-end gap-3 sm:ml-4 sm:mt-0"></div>
+        <div class="flex w-full items-center justify-center">
+            <img class="" src="images/pages/banner/banner.png" alt="" />
+        </div>
     </div>
     <ng-container *ngIf="product$ | async as product">
         <div class="overflow-y-auto">
@@ -128,7 +130,7 @@
                 </section>
 
                 <section>
-                    <div class="mt-8 flex w-full flex-col gap-3 px-8">
+                    <div class="my-8 flex w-full flex-col gap-3 px-8">
                         <div class="text-xl font-semibold">Reviews</div>
                         <ng-container *ngIf="feedbacks$ | async as feedbacks">
                             <ng-container

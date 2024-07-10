@@ -125,7 +125,7 @@ export class OrderService {
     cancelOrder(id: string) {
         return this.orders$.pipe(
             take(1),
-            switchMap(() => this._httpClient.put<Order>(`/api/orders/${id}/cancel`, null).pipe(
+            switchMap(() => this._httpClient.put<Order>(`/api/orders/${id}/cancel`, { note: null }).pipe(
                 map((updatedOrder) => {
 
                     // Update order

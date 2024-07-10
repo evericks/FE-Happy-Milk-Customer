@@ -108,6 +108,7 @@ export const appRoutes: Route[] = [
         children: [
             { path: 'checkout', loadChildren: () => import('app/modules/customer/checkout/checkout.routes') },
             { path: 'orders', loadChildren: () => import('app/modules/customer/order/order.routes') },
+            { path: 'profile', loadChildren: () => import('app/modules/customer/profile/profile.routes') },
         ]
     }
 ];

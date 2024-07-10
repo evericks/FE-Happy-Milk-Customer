@@ -3,7 +3,7 @@
 >
     <!-- Header -->
     <div
-        class="relative flex flex-0 flex-col border-b px-6 py-8 sm:flex-row sm:items-center sm:justify-between md:px-8"
+        class="relative flex flex-0 flex-col sm:flex-row sm:items-center sm:justify-between"
     >
         <!-- Loader -->
         @if (isLoading) {
@@ -11,10 +11,26 @@
                 <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
             </div>
         }
+        <!-- Actions -->
+        <div class="flex w-full items-center justify-center">
+            <img class="" src="images/pages/banner/banner.png" alt="" />
+        </div>
     </div>
-    <div class="w-full overflow-y-auto">
-        <div class="mx-64 my-5">
-            <ng-container *ngIf="order$ | async as order">
+    <ng-container *ngIf="order$ | async as order">
+        <div class="w-full overflow-y-auto">
+            <div class="mx-64 my-5">
+                <ng-container *ngIf="order.note">
+                    <div class="px-8">
+                        <fuse-alert
+                            class="mt-8"
+                            [appearance]="'outline'"
+                            [showIcon]="false"
+                            [type]="'info'"
+                        >
+                            <strong>Note: </strong>{{ order.note }}
+                        </fuse-alert>
+                    </div>
+                </ng-container>
                 <div class="w-full" cdkScrollable>
                     <!-- Main -->
                     <div class="print:p-0">
@@ -222,7 +238,7 @@
                         FEEDBACK
                     </button>
                 </div>
-            </ng-container>
+            </div>
         </div>
-    </div>
+    </ng-container>
 </div>

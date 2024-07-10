@@ -8,12 +8,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { RouterModule } from '@angular/router';
+import { FuseAlertComponent } from '@fuse/components/alert';
 
 @Component({
     selector: 'order-detail',
     standalone: true,
     templateUrl: 'order-detail.component.html',
-    imports: [CommonModule, CustomPipesModule, MatIconModule, MatButtonModule, RouterModule]
+    imports: [CommonModule, CustomPipesModule, MatIconModule, MatButtonModule, RouterModule, FuseAlertComponent]
 })
 
 export class OrderDetailComponent implements OnInit {

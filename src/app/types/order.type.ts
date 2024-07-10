@@ -12,5 +12,6 @@ export interface Order {
     isPayment: boolean,
     status: string,
     createAt: string,
+    note?: string,
     orderDetails: OrderDetail[]
 }

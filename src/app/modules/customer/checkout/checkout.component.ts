@@ -13,6 +13,8 @@ import { CartService } from 'app/layout/common/cart/cart.service';
 import { Cart } from 'app/types/cart.type';
 import { Observable, Subject, catchError, debounceTime, filter, of, switchMap } from 'rxjs';
 import { OrderService } from '../order/order.service';
+import { UserService } from 'app/core/user/user.service';
+import { User } from 'app/core/user/user.types';
 
 @Component({
     selector: 'checkout',
@@ -37,13 +39,16 @@ export class CheckoutComponent implements OnInit {
     constructor(
         private _formBuilder: UntypedFormBuilder,
         private _cartService: CartService,
+        private _userService: UserService,
         private _fuseConfirmationService: FuseConfirmationService,
         private _orderService: OrderService
     ) { }
 
     ngOnInit(): void {
         this.cart$ = this._cartService.cart$;
-        this.initCheckoutForm();
+        this._userService.user$.subscribe(user => {
+            this.initCheckoutForm(user);
+        })
         this._cartService.cart$.subscribe(cart => {
             if (cart) {
                 this.calculateTotalPrice(cart);
@@ -54,12 +59,12 @@ export class CheckoutComponent implements OnInit {
         this.subscribeQuantityChange();
     }
 
-    initCheckoutForm() {
+    initCheckoutForm(user: User) {
         this.checkoutForm = this._formBuilder.group({
             amount: [null, [Validators.required]],
-            receiver: [null, [Validators.required]],
-            address: [null, [Validators.required, Validators.minLength(10)]],
-            phone: [null, [Validators.required, Validators.pattern('^(03|05|07|08|09)[0-9]{8}$')]],
+            receiver: [user.name, [Validators.required]],
+            address: [user.address, [Validators.required, Validators.minLength(10)]],
+            phone: [user.phone, [Validators.required, Validators.pattern('^(03|05|07|08|09)[0-9]{8}$')]],
             paymentMethod: ['Cash', [Validators.required]],
             orderDetails: [null, [Validators.required]]
         });

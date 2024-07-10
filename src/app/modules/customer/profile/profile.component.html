@@ -1,0 +1,95 @@
+<div class="mx-128 my-5 flex w-full flex-col">
+    <div class="my-5 flex w-full items-center justify-center">
+        <mat-icon
+            class="icon-size-24"
+            svgIcon="heroicons_outline:user-circle"
+        ></mat-icon>
+    </div>
+    <form class="flex w-full flex-col gap-5" [formGroup]="profileForm">
+        <!-- Section -->
+        <div class="w-full">
+            <div class="text-xl">Profile</div>
+            <div class="text-secondary">
+                Following information is publicly displayed, be careful!
+            </div>
+        </div>
+        <div class="mt-8 flex w-full flex-col gap-6">
+            <!-- Username -->
+            <div class="sm:col-span">
+                <mat-form-field
+                    class="fuse-mat-emphasized-affix w-full"
+                    [subscriptSizing]="'dynamic'"
+                >
+                    <mat-label>Username</mat-label>
+                    <div class="text-secondary" matPrefix>
+                        happymilk.evericks.com/
+                    </div>
+                    <input [formControlName]="'username'" matInput />
+                </mat-form-field>
+            </div>
+            <!-- Name -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>Name</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:user'"
+                        matPrefix
+                    ></mat-icon>
+                    <input [formControlName]="'name'" matInput />
+                </mat-form-field>
+            </div>
+            <!-- Phone -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>Phone</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:phone'"
+                        matPrefix
+                    ></mat-icon>
+                    <input [formControlName]="'phone'" matInput />
+                </mat-form-field>
+            </div>
+            <!-- Address -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>Address</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:tag'"
+                        matPrefix
+                    ></mat-icon>
+                    <input [formControlName]="'address'" matInput />
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="flex w-full justify-end">
+            <button mat-raised-button color="primary" (click)="updateUser()">
+                Save
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Notification -->
+<a class="cursor-pointer" *ngIf="flashMessage">
+    <fuse-alert
+        class="absolute bottom-0 right-0 z-999"
+        [type]="'success'"
+        [appearance]="'border'"
+        *ngIf="flashMessage === 'success'"
+    >
+        <span fuseAlertTitle>Success</span>
+        {{ message }}
+    </fuse-alert>
+    <fuse-alert
+        class="absolute bottom-0 right-0 z-999"
+        [type]="'error'"
+        [appearance]="'border'"
+        *ngIf="flashMessage === 'error'"
+    >
+        <span fuseAlertTitle>Error</span>
+        {{ message }}
+    </fuse-alert>
+</a>
