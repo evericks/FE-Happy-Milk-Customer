@@ -110,5 +110,11 @@ export const appRoutes: Route[] = [
             { path: 'orders', loadChildren: () => import('app/modules/customer/order/order.routes') },
             { path: 'profile', loadChildren: () => import('app/modules/customer/profile/profile.routes') },
         ]
-    }
+    },
+
+    // 404 & Catch all
+    { path: '406-not-accepted', pathMatch: 'full', loadChildren: () => import('app/modules/admin/pages/error/error-406/error-406.routes') },
+    { path: '404-not-found', pathMatch: 'full', loadChildren: () => import('app/modules/admin/pages/error/error-404/error-404.routes') },
+    { path: '500-internal-server-error', pathMatch: 'full', loadChildren: () => import('app/modules/admin/pages/error/error-500/error-500.routes') },
+    { path: '**', redirectTo: '404-not-found' }
 ];

@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, forwardRef, OnInit } from '@angular/core';
-import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { FuseAlertComponent } from '@fuse/components/alert';
 import { CustomPipesModule } from '@fuse/pipes/custom/custom-pipes.module';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { Order } from 'app/types/order.type';
 import { Observable } from 'rxjs';
 import { OrderService } from '../order.service';
-import { FuseAlertComponent } from '@fuse/components/alert';
-import { FuseConfirmationService } from '@fuse/services/confirmation';
 
 @Component({
     selector: 'review',

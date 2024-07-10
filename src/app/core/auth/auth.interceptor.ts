@@ -1,5 +1,6 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'app/core/auth/auth.service';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { environment } from 'environments/environment.prod';
@@ -13,6 +14,7 @@ import { Observable, catchError, throwError } from 'rxjs';
  */
 export const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> => {
     const authService = inject(AuthService);
+    const router = inject(Router)
     const baseUrl = environment.apiURL;
 
     // Clone the request object
@@ -50,6 +52,24 @@ export const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn):
 
                 // Reload the app
                 location.reload();
+            }
+
+            // Catch "406 Not Accepted" responses
+            if (error instanceof HttpErrorResponse && error.status === 406) {
+                // Sign out
+                authService.signOut();
+
+                // Navigate to 406 page
+                router.navigate(['/406-not-accepted']);
+            }
+
+            // Catch "500 Internal Server Error" responses
+            if (error instanceof HttpErrorResponse && error.status === 500) {
+                // Sign out
+                authService.signOut();
+
+                // Navigate to 500 page
+                router.navigate(['/500-internal-server-error']);
             }
 
             return throwError(error);
