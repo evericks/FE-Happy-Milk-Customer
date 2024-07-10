@@ -171,10 +171,6 @@ export class CheckoutComponent implements OnInit {
                     });
                 })
             }
-        }, error => {
-            if (error.status === 406) {
-
-            }
         })
     }
 
